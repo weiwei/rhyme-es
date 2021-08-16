@@ -4,36 +4,45 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
-use syllabize_es::Word;
+use syllabize_es::{RhymeType, Word};
 
 fn main() {
     let reg = Regex::new("^[a-záéíóúñ]+$").unwrap();
     let matches = App::new("rhyme")
         .version("1.0")
-        .author("Kevin K. <kbknapp@gmail.com>")
-        .about("Does awesome things")
-        .arg(Arg::with_name("WORD").value_name("WORD").takes_value(true))
+        .author("Weiwei Wang <gastlygem@gmail.com>")
+        .about("Find rhyming words")
+        .arg(Arg::with_name("word").value_name("WORD").takes_value(true))
         .arg(
-            Arg::with_name("RESOURCE")
+            Arg::with_name("resource")
                 .value_name("RESOURCE")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("THRESHOLD")
+            Arg::with_name("threshold")
                 .value_name("THRESHOLD")
                 .takes_value(true),
         )
+        .arg(
+            Arg::with_name("assonants")
+                .short("a")
+        )
         .get_matches();
 
-    let word: Word = matches.value_of("WORD").unwrap().into();
-    let rm = word.rhyme();
+    let word: Word = matches.value_of("word").unwrap().into();
 
-    let resource = matches.value_of("RESOURCE").unwrap();
+    let resource = matches.value_of("resource").unwrap();
     let threshold = matches
-        .value_of("THRESHOLD")
+        .value_of("threshold")
         .unwrap()
         .parse::<u32>()
         .unwrap();
+
+    let contain_assonants = if matches.is_present("assonants") {
+        RhymeType::Assonant
+    } else {
+        RhymeType::Consonant
+    };
 
     // File hosts must exist in current path before this produces output
     let path = Path::new(resource);
@@ -48,8 +57,7 @@ fn main() {
                     continue;
                 }
                 let the_word: Word = y.into();
-                let rm2 = the_word.rhyme();
-                if rm == rm2 {
+                if word.rhymes_with(&the_word, contain_assonants) {
                     let z = x[2].trim().replace(",", "").parse::<u32>().unwrap();
                     let cl = the_word.syllables.len();
                     match recs.get_mut(&cl) {
@@ -73,8 +81,11 @@ fn main() {
     s.sort();
 
     for i in s.iter() {
-        
-        println!("Words with {} syllable{}:", i, if i == &1 { "" } else { "s"});
+        println!(
+            "Words with {} syllable{}:",
+            i,
+            if i == &1 { "" } else { "s" }
+        );
         println!("{}\n", recs.get(i).unwrap().join(", "));
     }
 
