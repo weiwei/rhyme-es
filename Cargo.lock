@@ -108,8 +108,6 @@ checksum = "8ea5119cdb4c55b55d432abb513a0429384878c15dde60cc77b1c99de1a95a6a"
 [[package]]
 name = "syllabize-es"
 version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d4ee27e9da773ce04da5bb63ad8f70425f78b0c7b406cf1ac5b001c49bc80ad"
 dependencies = [
  "regex",
 ]

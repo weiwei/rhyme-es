@@ -8,5 +8,5 @@ edition = "2018"
 [dependencies]
 clap = "2.33.3"
 regex = "1.5.4"
-syllabize-es = "0.4.0"
-# syllabize-es = { path = "../syllabize-es" }
+# syllabize-es = "0.4.0"
+syllabize-es = { path = "../syllabize-es" }

@@ -7,6 +7,9 @@ Find rhyming words in Spanish.
 * Ability to specify range of words, e.g., 1000, 10000, or more.
 * Order by number of syllables
 * Order by frequency
+* Ability to choose dictionary
+* Speed
+* Metric syllables
 
 ## Implementation
 
