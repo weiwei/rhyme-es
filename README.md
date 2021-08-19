@@ -6,26 +6,28 @@ Find rhyming words in Spanish.
 
 Already prepared in the repo, but in case I forget:
 
-Frequency list: [RAE Corpus](https://corpus.rae.es/lfrecuencias.html), `./CREA_total.TXT`. Note that the list is iso-8859-1 encoded, It ahs to be converted to UTF8.
+Frequency list: [RAE Corpus](https://corpus.rae.es/lfrecuencias.html), `./CREA_total.TXT`. Note that the list is iso-8859-1 encoded, It has to be converted to UTF8 before use.
 
 Dictionary: hunspell dictionaries from https://github.com/wooorm/dictionaries, extracted to word list with `unmunch`, `./words.txt`.
 
 ## Usage
 
 ```sh
+# Initialize word frequency map
 cargo run --release --bin init
+# Start the app
 cargo run --release --bin query
 ```
 
 ## Features
 
-* [] Order by number of syllables
+* [ ] Order by number of syllables
 * [x] Order by frequency
-* [] Ability to choose dictionary
-* [] Speed
-* [] Metric syllables
-* [] Assonant rhymes
-* [] homophonous consonants, namely `ll` and `y`
+* [ ] Ability to choose dictionary
+* [ ] Speed
+* [ ] Metric syllables
+* [ ] Assonant rhymes
+* [ ] homophonous consonants, namely `ll` and `y`
 
 And the assorted functionalities that exist in https://buscapalabras.com.ar/rimas.php
 
@@ -35,5 +37,9 @@ And the assorted functionalities that exist in https://buscapalabras.com.ar/rima
 
 ## Used
 
-`syllabize-es` crate, my own dog food.
-`serde` with `bincode`, good stuff.
+* `syllabize-es` crate, my own dog food.
+* `serde` with `bincode`, good stuff.
+
+## License
+
+Dunno. The dictionary I used is GPL, but they are just data. Is it OK to use a more permissive license for the code?

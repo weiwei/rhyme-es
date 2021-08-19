@@ -1,5 +1,4 @@
 /// Load serialized data, search for rhyming words and print the results.
-
 use rhyme_es::Entry;
 use std::collections::HashMap;
 use std::fs::File;
@@ -10,7 +9,7 @@ use syllabize_es::{RhymeType, Word};
 fn main() {
     let start = Instant::now();
     let mut f = BufReader::new(File::open("rhyme.db").unwrap());
-    let todo: HashMap<String, Vec<Entry>> = bincode::deserialize_from(&mut f).unwrap();
+    let all_words: HashMap<String, Vec<Entry>> = bincode::deserialize_from(&mut f).unwrap();
     println!("{:?}", Instant::now() - start);
     loop {
         print!("Your word: ");
@@ -19,7 +18,7 @@ fn main() {
         io::stdin().read_line(&mut x).expect("Error reading input");
         let w: Word = x.trim().into();
         let mut rhyming_words = vec![];
-        for (k, v) in todo.iter() {
+        for (k, v) in all_words.iter() {
             let z: Word = k.as_str().into();
             if w.rhymes_with(&z, RhymeType::Consonant) {
                 rhyming_words.extend_from_slice(&v[..]);

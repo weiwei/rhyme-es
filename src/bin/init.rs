@@ -1,27 +1,27 @@
 /// Serialize dictionary and frequency data to the disk.
-
 use regex::Regex;
-use rhyme_es::{Entry};
+use rhyme_es::Entry;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{self, BufRead, BufWriter};
-use std::time::Instant;
 use std::path::Path;
+use std::time::Instant;
 
-use syllabize_es::{Word};
+use syllabize_es::Word;
 
-/// The ratio to normalized frequency, i.e. frequency per 1 million words from 
+/// The ratio to normalized frequency, i.e. frequency per 1 million words from
 /// text. Note that the RAE file already have normalized frequency but it's only
 /// rounded to 2 decimals, which is not quite enough here.
 const RATIO: f32 = 152.55832;
 
 /// Reads frequency data
-pub fn read_freq() -> HashMap<String, f32> {
+fn read_freq() -> HashMap<String, f32> {
     // List contains non-Spanish words that needs to be filtered out.
     let reg = Regex::new("^[a-záéíóúñ]+$").unwrap();
-    let mut dic = HashMap::new();
+    let mut frequencies = HashMap::new();
     let start = Instant::now();
-    if let Ok(lines) = read_lines("CREA_TOTAL.TXT") { // TODO: Hardcoded file position
+    if let Ok(lines) = read_lines("CREA_TOTAL.TXT") {
+        // TODO: Hardcoded file position
         println!("Reading freq list...");
         for line in lines.flatten() {
             let line_content: Vec<&str> = line.split('\t').collect();
@@ -38,37 +38,38 @@ pub fn read_freq() -> HashMap<String, f32> {
             } else {
                 0.0
             };
-            dic.insert(word.to_string(), freq / RATIO);
+            frequencies.insert(word.to_string(), freq / RATIO);
         }
     }
     println!("Done in {:?}", Instant::now() - start);
-    dic
+    frequencies
 }
 
 /// Reads dictionary data. Note that hunspell has dictionaries for different
 /// countries, but here only the Peninsula dictionary is used.
 /// TODO: Support different dictionaries
-pub fn read_dic() -> HashSet<String> {
-    let mut dic = HashSet::new();
+fn read_dictionary() -> HashSet<String> {
+    let mut words = HashSet::new();
     let start = Instant::now();
-    if let Ok(lines) = read_lines("words.txt") { // TODO: Remove hardcode
+    if let Ok(lines) = read_lines("words.txt") {
+        // TODO: Remove hardcode
         println!("Reading dictionary...");
         // Consumes the iterator, returns an (Optional) String
         for line in lines.flatten() {
-            dic.insert(line.to_owned());
+            words.insert(line.to_owned());
         }
     }
     println!("Done in {:?}", Instant::now() - start);
-    dic
+    words
 }
 
 fn main() {
-    let words = read_dic();
+    let words = read_dictionary();
     let freq_map = read_freq();
 
     println!("Merging...");
     let start = Instant::now();
-    // Words are a hashmap with the rhyming part as the key, and a list of 
+    // Words are a hashmap with the rhyming part as the key
     let mut all_words: HashMap<String, Vec<Entry>> = HashMap::new();
     for w in words {
         let the_word: Word = w.as_str().into();
