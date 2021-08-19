@@ -2,21 +2,38 @@
 
 Find rhyming words in Spanish.
 
+## Resources
+
+Already prepared in the repo, but in case I forget:
+
+Frequency list: [RAE Corpus](https://corpus.rae.es/lfrecuencias.html), `./CREA_total.TXT`. Note that the list is iso-8859-1 encoded, It ahs to be converted to UTF8.
+
+Dictionary: hunspell dictionaries from https://github.com/wooorm/dictionaries, extracted to word list with `unmunch`, `./words.txt`.
+
+## Usage
+
+```sh
+cargo run --release --bin init
+cargo run --release --bin query
+```
+
 ## Features
 
-* Ability to specify range of words, e.g., 1000, 10000, or more.
-* Order by number of syllables
-* Order by frequency
-* Ability to choose dictionary
-* Speed
-* Metric syllables
+* [] Order by number of syllables
+* [x] Order by frequency
+* [] Ability to choose dictionary
+* [] Speed
+* [] Metric syllables
+* [] Assonant rhymes
+* [] homophonous consonants, namely `ll` and `y`
 
-## Implementation
+And the assorted functionalities that exist in https://buscapalabras.com.ar/rimas.php
 
-The word list is from the [RAE Corpus](https://corpus.rae.es/lfrecuencias.html).
-Note that the list is iso-8859-1 encoded, I've converted them to UTF8.
+## Performance
 
-0. Hit cache for the word. if found, output.
-1. Search the list, find the rhyming words, ordered by freq.
-2. Syllabize the words and group them.
-3. Cache the words in db (Q: what DB?)
+`query` binary takes 100ms to be ready. Memory footprint stays below 50M.
+
+## Used
+
+`syllabize-es` crate, my own dog food.
+`serde` with `bincode`, good stuff.
