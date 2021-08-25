@@ -78,8 +78,15 @@ fn main() {
         the_entry.push(Entry {
             word: w,
             freq: *freq,
+            nsyl: the_word.syllables.len() as u8,
+        });
+        the_entry.sort_by(|a, b| {
+            b.freq
+                .partial_cmp(&a.freq)
+                .unwrap_or(std::cmp::Ordering::Equal)
         });
     }
+
     let mut f = BufWriter::new(File::create("rhyme.db").unwrap());
     bincode::serialize_into(&mut f, &all_words).unwrap();
     println!("Done in {:?}", Instant::now() - start);

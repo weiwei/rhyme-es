@@ -6,6 +6,7 @@ pub struct Entry {
     pub word: String,
     /// normalized frequency
     pub freq: f32,
+    pub nsyl: u8,
 }
 
 pub type WordRepo = HashMap<String, Vec<Entry>>;

@@ -5,7 +5,7 @@ extern crate rocket;
 extern crate rocket_contrib;
 // #[macro_use] extern crate serde_derive;
 
-use std::{collections::BTreeMap, fs::File, io::BufReader, time::Instant};
+use std::{fs::File, io::BufReader, time::Instant};
 
 use rhyme_es::{Entry, WordRepo};
 use rocket::State;
@@ -56,42 +56,29 @@ fn rhyme(
             .unwrap_or(std::cmp::Ordering::Equal)
     });
 
-    let mut res = BTreeMap::new();
+    let mut res = vec![];
 
     for rwd in rhyming_words {
         if bando == 0 || freq2band(rwd.freq) >= bando {
-            let pwd: Word = rwd.word.as_str().into();
-            let the_entry = res.entry(pwd.syllables.len()).or_insert_with(Vec::new);
-            the_entry.push(rwd);
+            if numero_de_silabas == 0 || rwd.nsyl == numero_de_silabas {
+                res.push(rwd);
+            }
+        } else {
+            break;
         }
     }
 
-    let mut res2 = vec![];
-    for (k, v) in res.iter() {
-        if numero_de_silabas == 0 || *k as u8 == numero_de_silabas {
-            res2.push(ResBySyllableCount {
-                syllable_count: *k as u8,
-                words: v.clone(),
-            });
-        }
-    }
     let duration = Instant::now() - start;
     Json(Res {
-        contents: res2,
+        contents: res,
         duration: duration.as_secs_f64(),
     })
 }
 
 #[derive(Serialize)]
 struct Res {
-    contents: Vec<ResBySyllableCount>,
+    contents: Vec<Entry>,
     duration: f64,
-}
-
-#[derive(Serialize)]
-struct ResBySyllableCount {
-    syllable_count: u8,
-    words: Vec<Entry>,
 }
 
 /// https://public.oed.com/how-to-use-the-oed/key-to-frequency/
@@ -106,6 +93,6 @@ pub fn freq2band(freq: f32) -> u8 {
     } else if freq > 0.0 {
         2
     } else {
-        1 
+        1
     }
 }
