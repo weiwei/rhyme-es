@@ -86,10 +86,12 @@ fn consonant_rhyme(
 fn assonant_rhyme(
     config: State<Config>,
     palabra: String,
-    nsyl: u8,
-    freq: u8,
+    nsyl: Option<u8>,
+    freq: Option<u8>,
 ) -> Json<Res> {
     let start = Instant::now();
+    let nsyl = nsyl.unwrap_or(0);
+    let freq = freq.unwrap_or(0);
     let w: Word = palabra.as_str().into();
     let mut rhyming_words = vec![];
     for (k, v) in config.words.iter() {
