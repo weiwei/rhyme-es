@@ -3,7 +3,7 @@ use rhyme_es::WordRepo;
 use std::fs::File;
 use std::io::{self, BufReader, *};
 use std::time::Instant;
-use syllabize_es::{RhymeType, Word};
+use syllabize_es::{Word};
 
 fn main() {
     let start = Instant::now();
@@ -19,7 +19,7 @@ fn main() {
         let mut rhyming_words = vec![];
         for (k, v) in all_words.iter() {
             let z: Word = k.as_str().into();
-            if w.rhymes_with(&z, RhymeType::Consonant) {
+            if w.rhymes_with(&z, None) {
                 rhyming_words.extend_from_slice(&v[..]);
             }
         }

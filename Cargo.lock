@@ -949,9 +949,9 @@ checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
 
 [[package]]
 name = "syllabize-es"
-version = "0.4.2"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b11b9b24fd027f8e8e273d7b718deb6788ed116bbcaa34c11ebf4b8bf47099bc"
+checksum = "30280d4629ffacdb731293f4a5eb528146ad65e0ec53692986225a4f438c8288"
 
 [[package]]
 name = "syn"
