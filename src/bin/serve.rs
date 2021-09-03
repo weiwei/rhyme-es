@@ -8,8 +8,10 @@ extern crate rocket_contrib;
 use std::{fs::File, io::BufReader, time::Instant};
 
 use rhyme_es::{Entry, WordRepo};
+use rocket::http::Method;
 use rocket::State;
 use rocket_contrib::json::Json;
+use rocket_cors::AllowedOrigins;
 use serde::Serialize;
 use syllabize_es::{RhymeOptions, Word};
 
@@ -18,12 +20,31 @@ struct Config {
 }
 
 fn main() {
+    let allowed_origins = AllowedOrigins::some_exact(&[
+        "rymador.vercel.app",
+        "rymador-gastlygem.vercel.app",
+        "localhost",
+        "127.0.0.1",
+    ]);
+
+    // You can also deserialize this
+    let cors = rocket_cors::CorsOptions {
+        allowed_origins,
+        allowed_methods: vec![Method::Get].into_iter().map(From::from).collect(),
+        // allowed_headers: AllowedHeaders::some(&["Authorization", "Accept"]),
+        allow_credentials: true,
+        ..Default::default()
+    }
+    .to_cors()
+    .unwrap();
+
     let mut f = BufReader::new(File::open("rhyme.db").unwrap());
     let words: WordRepo = bincode::deserialize_from(&mut f).unwrap();
 
     rocket::ignite()
         .manage(Config { words })
         .mount("/api", routes![consonant_rhyme, assonant_rhyme])
+        .attach(cors)
         .launch();
 }
 
@@ -125,7 +146,6 @@ fn assonant_rhyme(
         duration: duration.as_secs_f64(),
     })
 }
-
 
 #[derive(Serialize)]
 struct Res {

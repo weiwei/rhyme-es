@@ -3,7 +3,7 @@ use rhyme_es::WordRepo;
 use std::fs::File;
 use std::io::{self, BufReader, *};
 use std::time::Instant;
-use syllabize_es::{Word};
+use syllabize_es::Word;
 
 fn main() {
     let start = Instant::now();
