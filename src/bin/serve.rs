@@ -20,12 +20,7 @@ struct Config {
 }
 
 fn main() {
-    let allowed_origins = AllowedOrigins::some_exact(&[
-        "rymador.vercel.app",
-        "rymador-gastlygem.vercel.app",
-        "localhost",
-        "127.0.0.1",
-    ]);
+    let allowed_origins = AllowedOrigins::all();
 
     // You can also deserialize this
     let cors = rocket_cors::CorsOptions {
