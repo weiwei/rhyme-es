@@ -9,10 +9,10 @@ RUN --mount=type=cache,target=/usr/local/cargo,from=rust:latest,source=/usr/loca
     cargo build --release && mv ./target/release/serve ./serve
 
 # Runtime image
-FROM alpine:latest
+FROM debian:bullseye-slim
 
 # Run as "app" user
-RUN adduser -D app
+RUN useradd -ms /bin/bash app
 
 USER app
 WORKDIR /app
