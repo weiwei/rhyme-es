@@ -15,8 +15,10 @@ Dictionary: hunspell dictionaries from https://github.com/wooorm/dictionaries, e
 ```sh
 # Initialize word frequency map
 cargo run --release --bin init
-# Start the app
+# Start the console app
 cargo run --release --bin query
+# Start the HTTP API
+cargo run --release --bin serve
 ```
 
 ## Features

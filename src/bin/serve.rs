@@ -2,7 +2,6 @@
 #[macro_use]
 extern crate rocket;
 // #[macro_use]
-extern crate rocket_contrib;
 // #[macro_use] extern crate serde_derive;
 
 use std::{fs::File, io::BufReader, time::Instant};
@@ -10,16 +9,17 @@ use std::{fs::File, io::BufReader, time::Instant};
 use rhyme_es::{Entry, WordRepo};
 use rocket::http::Method;
 use rocket::State;
-use rocket_contrib::json::Json;
 use rocket_cors::AllowedOrigins;
 use serde::Serialize;
+use rocket::serde::json::Json;
 use syllabize_es::{RhymeOptions, Word};
 
 struct Config {
     words: WordRepo,
 }
 
-fn main() {
+#[launch]
+fn rocket() -> _ {
     let allowed_origins = AllowedOrigins::all();
 
     // You can also deserialize this
@@ -36,16 +36,15 @@ fn main() {
     let mut f = BufReader::new(File::open("rhyme.db").unwrap());
     let words: WordRepo = bincode::deserialize_from(&mut f).unwrap();
 
-    rocket::ignite()
+    rocket::build()
         .manage(Config { words })
         .mount("/api", routes![consonant_rhyme, assonant_rhyme])
         .attach(cors)
-        .launch();
 }
 
 #[get("/c/<palabra>?<nsyl>&<freq>&<yeismo>&<seseo>&<bv>")]
-fn consonant_rhyme(
-    config: State<Config>,
+async fn consonant_rhyme(
+    config: &State<Config>,
     palabra: String,
     nsyl: Option<u8>,
     freq: Option<u8>,
@@ -100,7 +99,7 @@ fn consonant_rhyme(
 
 #[get("/a/<palabra>?<nsyl>&<freq>")]
 fn assonant_rhyme(
-    config: State<Config>,
+    config: &State<Config>,
     palabra: String,
     nsyl: Option<u8>,
     freq: Option<u8>,
