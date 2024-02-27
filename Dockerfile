@@ -20,6 +20,7 @@ WORKDIR /app
 # Get compiled binaries from builder's cargo install directory
 COPY --from=builder /usr/src/app/serve /app/serve
 COPY --from=builder /usr/src/app/rhyme.db /app/rhyme.db
+COPY --from=builder /usr/src/app/Rocket.toml /app/Rocket.toml
 
 # Run the app
 CMD ./serve
