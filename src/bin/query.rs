@@ -8,7 +8,7 @@ use syllabize_es::Word;
 fn main() {
     let start = Instant::now();
     let mut f = BufReader::new(File::open("rhyme.db").unwrap());
-    let all_words: WordRepo = bincode::deserialize_from(&mut f).unwrap();
+    let all_words: WordRepo = bincode::serde::decode_from_std_read(&mut f,  bincode::config::legacy()).unwrap();
     println!("{:?}", Instant::now() - start);
     loop {
         print!("Your word: ");

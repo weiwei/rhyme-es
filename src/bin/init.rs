@@ -88,7 +88,7 @@ fn main() {
     }
 
     let mut f = BufWriter::new(File::create("rhyme.db").unwrap());
-    bincode::serialize_into(&mut f, &all_words).unwrap();
+    bincode::serde::encode_into_std_write(&all_words, &mut f, bincode::config::legacy()).unwrap();
     println!("Done in {:?}", Instant::now() - start);
 }
 

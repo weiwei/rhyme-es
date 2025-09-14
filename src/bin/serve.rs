@@ -34,7 +34,7 @@ fn rocket() -> _ {
     .unwrap();
 
     let mut f = BufReader::new(File::open("rhyme.db").unwrap());
-    let words: WordRepo = bincode::deserialize_from(&mut f).unwrap();
+    let words: WordRepo = bincode::serde::decode_from_std_read(&mut f, bincode::config::legacy()).unwrap();
 
     rocket::build()
         .manage(Config { words })
